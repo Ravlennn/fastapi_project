@@ -42,7 +42,7 @@ class IncomingBook(BaseBook):
 # Класс, валидирующий исходящие данные. Он уже содержит id
 class ReturnedBook(BaseBook):  # {"id": 1, "title": "Clean Code", ....}
     id: int
-    pages: int | None = None
+    pages: int
 
 
 # Класс для возврата массива объектов "Книга"

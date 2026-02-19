@@ -13,6 +13,22 @@
       "cwd": "${workspaceFolder}",
       "jinja": true,
       "justMyCode": false
+    },
+    {
+      "name": "Tests",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/src",
+      "args": [
+        "tests",
+        "-ra",
+        "--color=yes",
+        "--verbosity=2",
+        "-c=${workspaceFolder}/src/pytest.ini"
+      ],
+      "justMyCode": false
     }
   ]
 }
