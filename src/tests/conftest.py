@@ -9,6 +9,7 @@ from typing import Generator
 import httpx
 import pytest
 import pytest_asyncio
+from icecream import ic
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from src.configurations.settings import settings
@@ -30,13 +31,16 @@ async_test_session = async_sessionmaker(async_test_engine, expire_on_commit=Fals
 
 
 # Получаем цикл событий для асинхорнного потока выполнения задач.
-@pytest_asyncio.fixture(scope="session", autouse=True)
+@pytest_asyncio.fixture(scope="session")
 def event_loop() -> Generator:
     """Create an instance of the default event loop for each test case."""
     # loop = asyncio.new_event_loop()  # На разных версиях питона и разных ОС срабатывает по разному
     loop = asyncio.get_event_loop()
     yield loop
-    loop.close()
+    try:
+        loop.close()
+    except Exception as e:
+        ic(e)
 
 
 # Создаем таблицы в тестовой БД. Предварительно удаляя старые.

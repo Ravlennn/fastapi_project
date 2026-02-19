@@ -9,7 +9,7 @@ API_V1_URL_PREFIX = "/api/v1/books"
 
 
 # Тест на ручку создающую книгу
-@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.asyncio()
 async def test_create_book(async_client):
     data = {
         "title": "Clean Architecture",
@@ -34,7 +34,7 @@ async def test_create_book(async_client):
     }
 
 
-@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.asyncio()
 async def test_create_book_with_old_year(async_client):
     data = {
         "title": "Clean Architecture",
@@ -48,7 +48,7 @@ async def test_create_book_with_old_year(async_client):
 
 
 # Тест на ручку получения списка книг
-@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.asyncio()
 async def test_get_books(db_session, async_client):
     # Создаем книги вручную, а не через ручку, чтобы нам не попасться на ошибку которая
     # может случиться в POST ручке
@@ -86,7 +86,7 @@ async def test_get_books(db_session, async_client):
 
 
 # Тест на ручку получения одной книги
-@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.asyncio()
 async def test_get_single_book(db_session, async_client):
     # Создаем книги вручную, а не через ручку, чтобы нам не попасться на ошибку которая
     # может случиться в POST ручке
@@ -110,7 +110,7 @@ async def test_get_single_book(db_session, async_client):
     }
 
 
-@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.asyncio()
 async def test_get_single_book_with_wrong_id(db_session, async_client):
     # Создаем книги вручную, а не через ручку, чтобы нам не попасться на ошибку которая
     # может случиться в POST ручке
@@ -119,17 +119,21 @@ async def test_get_single_book_with_wrong_id(db_session, async_client):
     db_session.add(book)
     await db_session.flush()
 
-    response = await async_client.get(f"{API_V1_URL_PREFIX}/42654876987")
+    response = await async_client.get(f"{API_V1_URL_PREFIX}/426548")
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
 # Тест на ручку обновления книги
-@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.asyncio()
 async def test_update_book(db_session, async_client):
     # Создаем книги вручную, а не через ручку, чтобы нам не попасться на ошибку которая
     # может случиться в POST ручке
     book = Book(author="Pushkin", title="Eugeny Onegin", year=2001, pages=104)
+
+    db_session.add(book)
+    await db_session.flush()
+
     data = {
         "title": "Mziri",
         "author": "Lermontov",
@@ -137,9 +141,6 @@ async def test_update_book(db_session, async_client):
         "year": 2024,
         "id": book.id,
     }
-
-    db_session.add(book)
-    await db_session.flush()
 
     response = await async_client.put(
         f"{API_V1_URL_PREFIX}/{book.id}",
@@ -151,15 +152,14 @@ async def test_update_book(db_session, async_client):
 
     # Проверяем, что обновились все поля
     res = await db_session.get(Book, book.id)
-    # assert res.title == "Mziri"
-    # assert res.author == "Lermontov"
-    # assert res.pages == 250
-    # assert res.year == 2024
-    # assert res.id == book.id
-    assert res == data
+    assert res.title == "Mziri"
+    assert res.author == "Lermontov"
+    assert res.pages == 250
+    assert res.year == 2024
+    assert res.id == book.id
 
 
-@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.asyncio()
 async def test_delete_book(db_session, async_client):
     book = Book(author="Lermontov", title="Mtziri", pages=510, year=2024)
 
@@ -178,7 +178,7 @@ async def test_delete_book(db_session, async_client):
     assert len(res) == 0
 
 
-@pytest.mark.asyncio(loop_scope="session")
+@pytest.mark.asyncio()
 async def test_delete_book_with_invalid_book_id(db_session, async_client):
     book = Book(author="Lermontov", title="Mtziri", pages=510, year=2024)
 
