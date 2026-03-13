@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.models.books import Book
-from src.schemas.books import IncomingBook, PatchBook, ReturnedBook
+from src.schemas import IncomingBook, PatchBook, ReturnedBook
 
 
 class BookService:
@@ -20,6 +20,7 @@ class BookService:
                 "author": book.author,
                 "year": book.year,
                 "pages": book.pages,
+                "seller_id": book.seller_id,
             }
         )
 
@@ -47,6 +48,7 @@ class BookService:
             updated_book.author = new_book_data.author
             updated_book.pages = new_book_data.pages
             updated_book.year = new_book_data.year
+            updated_book.seller_id = new_book_data.seller_id
 
             await self.session.flush()
 
@@ -63,6 +65,8 @@ class BookService:
                 book.year = patched_book.year
             if patched_book.pages is not None and patched_book.pages != book.pages:
                 book.pages = patched_book.pages
+            if patched_book.seller_id is not None and patched_book.seller_id != book.seller_id:
+                book.seller_id = patched_book.seller_id
 
             await self.session.flush()
             return book

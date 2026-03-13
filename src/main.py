@@ -20,7 +20,6 @@ from icecream import ic
 from src.configurations.database import create_db_and_tables, global_init
 from src.routers import api_router
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     ic("Inicializing app...")
