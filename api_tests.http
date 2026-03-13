@@ -1,0 +1,110 @@
+
+POST http://localhost:8000/api/v1/books/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "Clean Architecture",
+    "author": "Robert Martin",
+    "count_pages": 300,
+    "year": 2025,
+    "seller_id": 8
+}
+
+###
+
+# Получаем список книг
+GET http://localhost:8000/api/v1/books/ HTTP/1.1
+
+###
+
+# Получаем одну книгу по ее ИД
+GET http://localhost:8000/api/v1/books/5 HTTP/1.1
+
+###
+
+# Обновляем все поля в данных о книге
+PUT http://localhost:8000/api/v1/books/5 HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": 1,
+    "title": "Clean Code",
+    "author": "Robert Martin",
+    "year": 2022,
+    "pages": 310,
+    "seller_id": 2
+}
+
+###
+
+# Частично обновляем поля в данных о книге (PATCH)
+PATCH http://localhost:8000/api/v1/books/5 HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "Mziri",
+    "pages": 310
+}
+
+###
+
+# Удаляем книгу
+DELETE http://localhost:8000/api/v1/books/1 HTTP/1.1
+
+###Для Sellers:
+
+POST http://localhost:8000/api/v1/seller/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "first_name": "Pavel",
+    "last_name": "Kholkin",
+    "e_mail": "p.kholkin@g.nsu.ru",
+    "password": "zxcmagicdemon777"
+}
+
+###
+
+# Получаем список всех продавцов
+GET http://localhost:8000/api/v1/seller/ HTTP/1.1
+
+###
+
+# Создаем книгу для этого продавца
+POST http://localhost:8000/api/v1/books/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "Clean Code",
+    "author": "Robert Martin",
+    "year": 2022,
+    "count_pages": 22,
+    "seller_id": 2
+}
+
+###
+
+# Получаем одного продавца по его ID
+GET http://localhost:8000/api/v1/seller/2 HTTP/1.1
+
+###
+
+# Обновляем данные продавца
+PUT http://localhost:8000/api/v1/seller/8 HTTP/1.1
+Content-Type: application/json
+
+{
+    "first_name": "Peter",
+    "last_name": "Hohlin",
+    "e_mail": "petrhohlin@gmail.com"
+}
+
+###
+
+# Удаляем продавца
+DELETE http://localhost:8000/api/v1/seller/8 HTTP/1.1
+
+###
+
+# Проверяем, что книги удалились вместе с продавцом
+GET http://localhost:8000/api/v1/books/ HTTP/1.1
